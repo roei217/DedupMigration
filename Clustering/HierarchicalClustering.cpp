@@ -305,7 +305,7 @@ void HierarchicalClustering::completeLinkage(const ClustersMergeOffer& merge_off
 
 string HierarchicalClustering::getResultFileName(const double traffic, const int seed, const double gap,
                                                  const bool load_balance,const int eps, const string& output_path_prefix){
-    return output_path_prefix + "_T" + Utility::getString(traffic) +"_S"+ Utility::getString(seed) + "_G" +
+    return output_path_prefix + "_WT" + Utility::getString(traffic/100) +"_S"+ Utility::getString(seed) + "_G" +
         Utility::getString(gap) + "_E" + to_string(eps) + (load_balance? "_lb" : "") + ".csv";
 }
 

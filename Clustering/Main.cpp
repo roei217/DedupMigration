@@ -11,8 +11,8 @@ static void setUpAndValidateParser(CommandLineParser& parser){
                          " workloads to load, list of strings");
     parser.addConstraint("-fps", CommandLineParser::ArgumentType::STRING, 1, false,
                          "number of min hash fingerprints (input 'all' for all fps) - int or 'all'");
-    parser.addConstraint("-traffic", CommandLineParser::ArgumentType::INT, CommandLineParser::VARIABLE_NUM_OF_OCCURRENCES, false,
-                         "traffic - list of int");
+    parser.addConstraint("-WT", CommandLineParser::ArgumentType::DOUBLE, CommandLineParser::VARIABLE_NUM_OF_OCCURRENCES, false,
+                         "WT - list of int");
     parser.addConstraint("-lb", CommandLineParser::ArgumentType::BOOL,0, true,
                          "use load balancing (optional, default false)");
     parser.addConstraint("-seed", CommandLineParser::ArgumentType::INT, CommandLineParser::VARIABLE_NUM_OF_OCCURRENCES, false,
@@ -72,15 +72,15 @@ static vector<double> validateAndGetTraffics(const CommandLineParser& parser){
 
     vector<double> traffics;
 
-    for(const string& traffic: parser.getTag("-traffic")){
+    for(const string& wt: parser.getTag("-WT")){
         try {
-            const long long int converted_traffic = stoll(traffic);
-            if(converted_traffic < 0 || converted_traffic > 100)
-                throw invalid_argument("Traffic value should be between 0 to 100");
+            const double converted_wt = stod(wt);
+            if(converted_wt < 0 || converted_wt > 1)
+                throw invalid_argument("WT value should be between 0 to 1");
 
-            traffics.emplace_back(converted_traffic);
+            traffics.emplace_back(converted_wt * 100);
         } catch (invalid_argument &e) {
-            throw invalid_argument("Traffic value should be between 0 to 100");
+            throw invalid_argument("WT value should be between 0 to 1");
         }
     }
 
@@ -152,7 +152,7 @@ static string validateAndGetOutputPath(const CommandLineParser& parser){
 /**
  * 1. -workloads: workloads to load, list of strings
  * 2. -fps: number of min hash fingerprints (input 'all' for all fps) - int or 'all'
- * 3. -traffic: traffic - list of int
+ * 3. -WT: WT - list of doubles
  * 4. -lb: use load balancing (optional, default false)
  * 5. -seed: seeds for the algorithm, list of int
  * 6. -gap: pick random value from values in this gap - list of double
