@@ -1,0 +1,4 @@
+workload,initial size B,initial size %,traffic B,deletion B,final size B,final size %,total traffic B,total traffic %,total deletion B,total deletion %,lb score
+example_sampled_vol1.csv,147699,87.8805,0,13859,133840,82.3484
+example_sampled_vol2.csv,20369,12.1195,8320,0,28689,17.6516
+,,,,,,,8320,4.95038,5539,3.29569,0.214353
