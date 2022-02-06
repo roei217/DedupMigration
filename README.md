@@ -23,7 +23,7 @@ For more information, please read 'ILP/ILPExperiments.pdf'.
 
 Greedy
 ------
-A greedy algorithm works in iterations, in which the "best" file migration is selected for each iteration. Iteration type influences the method for calculating the best migration. During balancing iterations, the best migration will be the one that brings the system closer to balance; during optimization phases, the best migration will be the one that reduces the total system size without breaking the load balance constraints.
+The greedy algorithm works in iterations, in which the "best" file migration is selected for each iteration. Iteration type influences the method for calculating the best migration. During balancing iterations, the best migration will be the one that brings the system closer to balance; during optimization phases, the best migration will be the one that reduces the total system size without breaking the load balance constraints.
 
 For more information, please read 'Greedy/GreedyExperiments.pdf'.
 
