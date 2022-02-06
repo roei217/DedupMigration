@@ -7,8 +7,6 @@ Authors: Roei Kisous, Ariel Kolikant, Gala Yadgar (Technion - Israel Institute o
            Abhinav Duggal (Dell Technologies);
            Sarai Sheinvald (ORT Braude College of Engineering).
 		   
-There are 4 folders in this project:
-
 Clustering
 ------
 Clustering is a well-known technique for grouping objects based on their similarity. 
