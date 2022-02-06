@@ -13,7 +13,7 @@ Clustering is a well-known technique for grouping objects based on their similar
 It is fast and effective, and is directly applicable to our domain: files are similar if they share a large portion of their blocks. 
 Our approach is thus to create clusters of similar files and to assign each cluster to a volume, remapping those files that were assigned to a volume different from their original location.
 
-For more information, please read 'Clustering/HCexperiments.pdf'.
+For more information, please read 'Clustering/Clustering.pdf'.
 
 ILP
 ------
