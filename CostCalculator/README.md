@@ -11,7 +11,7 @@ Dependencies
 Running
 -------
 
-1. Complie the code,
+1. Complie the code
    > make
 
 2. Run calculator instance

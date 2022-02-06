@@ -7,7 +7,7 @@ Clustering is a migration plan creator for deduplicated storage systems.
 Running
 -------
 
-1. Complie the code,
+1. Complie the code
    > make
 
 2. Run clustering instance
