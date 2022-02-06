@@ -17,16 +17,13 @@ For more information, please read 'Clustering/Clustering.pdf'.
 
 ILP
 ------
-The purpose of this is to explain how to recreate the experiments done with the ILP algorithm.
-The algorithm creates an ILP model representing legal migration plans and utilizes the Gurobi ILP solver to find the model's optimal solution. The solution is then translated to a migration plan.The constraints of the model include contraints to maintain legal migrations and constraints to limit traffic usage and to achieve load balancing. In a case where no legal solution exists, none is returned. In a case where the optimal solution has not been reached within the given time, the best solution so far is given.
+The ILP algorithm constructs an ILP model for migration plans from the input deduplicated system, solves the ILP model using the Gurobi ILP solver, then translates the solution into a migration plan. The ILP solver finds the optimal solution for the model unless it runs out of time. If a timeout occurs, the best solution found before the timeout is returned. Although the optimal solution of the model is not the optimal solution of the migration plan, it is shown to be close. 
 
 For more information, please read 'ILP/ILPExperiments.pdf'.
 
 Greedy
 ------
-The purpose of this is to explain how to recreate the experiments done with the Greedy algorithm.
-The algorithm works in iterations, choosing the best file to migrate for every iteration. The defenition of best changes in accordance to the two types of phases; 1) the balancing phase attempts to achieve load balancing and prefers moving files from the biggest volume to the smallest volume 2) the optimization phase prefers to migrate files resulting in the most data removal. Greedy performs 5 iteration of each phase.
-
+A greedy algorithm works in iterations, in which the "best" file migration is selected for each iteration. Iteration type influences the method for calculating the best migration. During balancing iterations, the best migration will be the one that brings the system closer to balance; during optimization phases, the best migration will be the one that reduces the total system size without breaking the load balance constraints.
 For more information, please read 'Greedy/GreedyExperiments.pdf'.
 
 CostCalculator
