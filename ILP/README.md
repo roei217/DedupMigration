@@ -6,7 +6,7 @@ ILP is a migration plan creator for deduplicated storage systems.
 
 Running
 -------
-1. install and configure gurobi and boost
+1. install and configure gurobi and libboost
 
 2. Complie the code
    > ./compile_Thanos-united.sh
