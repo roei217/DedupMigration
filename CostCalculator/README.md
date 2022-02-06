@@ -1,10 +1,50 @@
-Explaining the Calculator job from the article: "The what, The from, and The to: The Migration Games in Deduplicated Systems"
-Roei Kisous, Ariel Kolikant, Abhinav Duggal, Sarai Sheinvald, Gala Yadgar
+# Calculator
 
-For evaluating the nature of a specific migration plan, we implemented a calculator that outputs the costs and requirements.
-From this plan, the calculator provides the traffic consumption, score achieved, and deletion obtained while also providing the initial and final size of each volume with specific traffic and deletion. Each volume is iterated over and its incoming traffic and resulting deletion is calculated. The final traffic is equal to the sum of all traffic calculated, and the final deletion is equal to the sum of all deletions minus the sum of all traffic.
-We added a results cache to save time, so that in case a migration plan needs to be calculated again (which we might not know about), it is not calculated again and instead the results are retrieved from the cache. The migration plan's hash is inserted as a key into the cache database with the corresponding results. The hash is recalculated and searched in the database when trying to find this plan again. It is returned if it is found, otherwise it is recalculated. The results will be fetched if the results are in the db specified in the -cache_path tag and the -no_cache tag was not used.
-Our file-based lock allows the calculator to run on multiple threads concurrently without user interaction. There is no restriction on the number of threads the user may run as long as he does not delete the txt file created under the folder in which the database is stored, this is the file lock.
-Furthermore, to test our plan, we use the calculator both on the sampled system (for real-time evaluation) and on the original system (for static evaluation).
+General Information
+-------------------
+Calculator results a migration plan's cost for deduplicated storage systems.
+
+Dependencies
+------------
+1. sqlite3 is required to use sqlite3 database.
+
+Running
+-------
+
+1. Complie the code,
+   > make
+
+2. Run calculator instance
+   > calc -file file_path *-output output_name* -cache_path db_path -no_cache -lb_sizes sizes_list
+		
+		2.1. file - the migration plan's file
+		2.2. cache_path - the full path to a sqlite3 database (.db)
+		Optional parameters:
+			2.3. no_cache - do not use the cache (useful for small volumes).
+			2.4. lb_sizes -  a list of the requested sizes for each final volume, default is set to perfect load balancing
+			2.5. output - the name of the output file, default is random
+
+Note that if more than 20 volumes are used, the cache will not be used regardless of the -no_cache option.
+
+Examples
+------------------
+Calculate a migration plan's cost for the plan in *example/example_migration_sample.csv* with cache path *example/example.db*
+and the output file is *example/output_sampled.csv*.
+   > ./calc -file example/example_migration_sample.csv -output example/output_sampled.csv -cache_path example/example.db
+  
+Calculate a migration plan's cost for the plan in *example/example_migration_original.csv* with cache path *example/example.db* but do not use it
+and the output file is *example/output_original.csv*.
+   > ./calc -file example/example_migration_original.csv -output example/output_original.csv -cache_path example/example.db -no_cache
+  
+Paper
+------
+To read more about Clustering please check our *paper*(https://www.usenix.org/conference/fast22/presentation/kisous):
+   "The what, The from, and The to: The Migration Games in Deduplicated Systems". In 20th USENIX Conference on File and Storage Technologies (FAST 22), 2022.
+
+Authors: Roei Kisous, Ariel Kolikant, Gala Yadgar (Technion - Israel Institute of Technology);
+           Abhinav Duggal (Dell Technologies);
+           Sarai Sheinvald (ORT Braude College of Engineering).
+
+Email : kisous[dot]roei[at]campus[dot]technion[dot]ac[dot]il
 
 For more information, please read 'CostCalc.pdf'.
