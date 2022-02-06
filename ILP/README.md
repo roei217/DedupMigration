@@ -26,7 +26,7 @@ Running
 
 Examples
 ------------------
-Find a migration plan for examples/basicLoadBalance_k1_3Vols, saving the summary in summary.csv, the migration plan cannot use more than 20% of the original size as traffic and must be within margin of 0.25 from the desired load balance. use all blocks without inner filter, random seed of 10 and 10 threads, saving the output into the outDir folder:
+Find a migration plan for examples/basicLoadBalance_k1_3Vols, saving the summary in summary.csv, the migration plan cannot use more than 20% of the original size as traffic and must be within margin of 0.25 from the desired load balance and cannot run mmore than 6 hours (21600 seconds). use all blocks without inner filter, random seed of 10 and 10 threads, saving the output into the outDir folder:
    > ./Thanos-United examples/basicLoadBalance_k1_3Vols summary.csv 20 0.25 0 outDir/ 21600 10 10
 
 Paper
