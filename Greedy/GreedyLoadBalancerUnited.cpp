@@ -1,3 +1,6 @@
+/**
+Created by Ariel Kolikant
+*/
 #include <algorithm>
 #include <numeric>
 #include <cfloat>
