@@ -34,9 +34,10 @@ Paper
 To read more about ILP please check our [paper](https://www.usenix.org/conference/fast22/presentation/kisous):
    "The what, The from, and The to: The Migration Games in Deduplicated Systems". In 20th USENIX Conference on File and Storage Technologies (FAST 22), 2022.
 
-Authors: Roei Kisous, Ariel Kolikant, Gala Yadgar (Technion - Israel Institute of Technology);
-           Abhinav Duggal (Dell Technologies);
-           Sarai Sheinvald (ORT Braude College of Engineering).
+Authors: Roei Kisous and Ariel Kolikant, Technion - Israel Institute of Technology; 
+		 Abhinav Duggal, DELL EMC; 
+		 Sarai Sheinvald, ORT Braude College of Engineering; 
+		 Gala Yadgar, Technion - Israel Institute of Technology
 
 Email : sarielko@campus.technion.ac.il
 

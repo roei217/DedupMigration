@@ -1,3 +1,6 @@
+/**
+Created by Roei Kisous
+*/
 #include "HierarchicalClustering.hpp"
 #include <cmath>
 #include <algorithm>

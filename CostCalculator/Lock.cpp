@@ -1,3 +1,6 @@
+/**
+Created by Roei Kisous
+*/
 #include "Lock.h"
 #include <stdexcept>
 

@@ -1,3 +1,6 @@
+/**
+Created by Roei Kisous
+*/
 #include "Node.hpp"
 
 Node::Node(const int file, const double size) :
