@@ -1,6 +1,3 @@
-/**
-Created by Ariel Kolikant
-*/
 #include "gurobi_c++.h"
 #include <fstream>
 #include <chrono>
@@ -1288,8 +1285,8 @@ void addConstraint_traffic_and_setObjectiveFullMigration(GRBModel &model, std::v
 }
 
 // Contraint 11. For each volume v,
-// (wv−μ)×Size(S′) ≤ size(v′) ≤ (wv+μ)×Size(S′),
-// where size(v′) is the volume size after migration,
+// (wvâˆ’Î¼)Ã—Size(Sâ€²) â‰¤ size(vâ€²) â‰¤ (wv+Î¼)Ã—Size(Sâ€²),
+// where size(vâ€²) is the volume size after migration,
 // i.e. The sum of its non-deleted blocks and blocks copied to it.
 void addConstraint_loadBalancing(GRBModel & model, std::vector<std::vector<GRBVar*>>& C_i_s_t,  std::vector<GRBVar*> &D_i_s, std::vector<std::string> &source_volume_list, std::vector<double> &load_volume_list, std::vector<std::vector<std::vector<int>>> &intersects_source_target_blocksn, std::vector<double> &block_sizes, double Margin, int innerFilterSize) {
 
@@ -1314,12 +1311,20 @@ void addConstraint_loadBalancing(GRBModel & model, std::vector<std::vector<GRBVa
             {
                 exist_s[std::stoi(splitted_content[1])] = true;
                 if(InnerFilterSize) {
-                    std::string threeLastChars = splitted_content[2].substr( splitted_content[2].length() - 3 );
+                    std::cout << splitted_content[2] << std::endl;
+
+					if(splitted_content[2].substr( splitted_content[2].length() - 3 ).find("z") != std::string::npos){
+						// includeInInnerFilter[std::stoi(splitted_content[1])] = false;
+                        continue;
+					}
+
+					std::string threeLastChars = splitted_content[2].substr( splitted_content[2].length() - 3 );
                     std::string threeLastCharsBits = std::string(hex_char_to_bin(threeLastChars[0])) + std::string(hex_char_to_bin(threeLastChars[1])) + std::string(hex_char_to_bin(threeLastChars[2]));;
+
                     std::string filterBits = threeLastCharsBits.substr( threeLastCharsBits.length() - InnerFilterSize );
-                    if(filterBits.find("1") != std::string::npos) {
-                        std::cout << splitted_content[2] << " " << splitted_content[2].substr( splitted_content[2].length() - 3 ) << " " << filterBits << std::endl;
-                        includeInInnerFilter[std::stoi(splitted_content[1])] = false;
+                    
+					if(filterBits.find("1") != std::string::npos) {
+						includeInInnerFilter[std::stoi(splitted_content[1])] = false;
                     }
                 }
             }
@@ -1330,6 +1335,16 @@ void addConstraint_loadBalancing(GRBModel & model, std::vector<std::vector<GRBVa
 
     std::cout << "total: " << C_i_s_t.size() << " in filter: " << count(includeInInnerFilter.begin(), includeInInnerFilter.end(), true) << std::endl;
 
+    double Filtered_SOURCE_SIZE = 0.0;
+    for(int source = 0 ; source < intersects_source_target_blocksn.size(); source ++) {
+        for(int i = 0; i < intersects_source_target_blocksn[source][source].size(); i++) {
+            if(includeInInnerFilter[i]) {
+                Filtered_SOURCE_SIZE += block_sizes[intersects_source_target_blocksn[source][source][i]];
+            }
+        }
+    }
+    std::cout << Filtered_SOURCE_SIZE;
+
     for (int source = 0; source < intersects_source_target_blocksn.size(); source++) {
         for (int target = 0; target < intersects_source_target_blocksn[0].size(); target++) {
             std::vector<int> relevantIntersect = intersects_source_target_blocksn[source][target];
@@ -1337,10 +1352,12 @@ void addConstraint_loadBalancing(GRBModel & model, std::vector<std::vector<GRBVa
                 continue;
             }
             for(int i = 0; i < C_i_s_t.size(); i++) {
-                if(exist_s_i[target][i]) {
-                    continue;
-                } 
-                TotalChange += C_i_s_t[i][source][target] * block_sizes[i];
+                if(includeInInnerFilter[i]) {
+                    if(exist_s_i[target][i]) {
+                        continue;
+                    } 
+                    TotalChange += C_i_s_t[i][source][target] * block_sizes[i];
+                }
             }
         }
 
@@ -1367,14 +1384,16 @@ void addConstraint_loadBalancing(GRBModel & model, std::vector<std::vector<GRBVa
                 continue;
             }
             for(int i = 0; i < C_i_s_t.size(); i++) {
-                if(exist_s_i[target][i]) {
-                    continue;
-                } 
-                SumNewBlocks += C_i_s_t[i][source][target] * block_sizes[i];
+                if(includeInInnerFilter[i]) {
+                    if(exist_s_i[target][i]) {
+                        continue;
+                    } 
+                    SumNewBlocks += C_i_s_t[i][source][target] * block_sizes[i];
+                }
             }            
         }
-        model.addConstr(SumNewBlocks + SumOldBlocks <= (SOURCE_SIZE + TotalChange) * (load_volume_list[target] + Margin));
-        model.addConstr(SumNewBlocks + SumOldBlocks >= (SOURCE_SIZE + TotalChange) * (load_volume_list[target] - Margin));
+        model.addConstr(SumNewBlocks + SumOldBlocks <= (Filtered_SOURCE_SIZE + TotalChange) * (load_volume_list[target] + Margin));
+        model.addConstr(SumNewBlocks + SumOldBlocks >= (Filtered_SOURCE_SIZE + TotalChange) * (load_volume_list[target] - Margin));
     }   
 }
 
@@ -1661,7 +1680,10 @@ int main(int argc, char *argv[])
         std::cout << "Error code = " << e.getErrorCode() << std::endl;
         std::cout << e.getMessage() << std::endl;
         recordFail(write_solution, e.getMessage());
-
+    } catch (const std::exception& e) {
+        std::cout << e.what() << std::endl;
+    } catch (const std::string& e) {
+        std::cout << e << std::endl;
     } catch(...) {
         std::cout << "Exception during optimization" << std::endl;
         recordFail(write_solution, "Exception during optimization");
